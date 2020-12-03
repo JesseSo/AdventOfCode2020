@@ -31,28 +31,17 @@ func move(x int, y int) {
 	scanner := bufio.NewScanner(file)
 
 	for scanner.Scan() {
-		if y == 1 {
-			var ch = string(scanner.Text()[pos])
+		var ch = string(scanner.Text()[pos])
+		if scanRow%y == 0 {
+			pos = pos + x
 			if strings.EqualFold(ch, tree) {
 				count++
 			}
-			pos = pos + x
 			if pos >= 31 {
 				pos = pos - 31
 			}
-		} else {
-			var ch = string(scanner.Text()[pos])
-			if scanRow%y == 0 {
-				pos = pos + x
-				if strings.EqualFold(ch, tree) {
-					count++
-				}
-				if pos >= 31 {
-					pos = pos - 31
-				}
-			}
-			scanRow++
 		}
+		scanRow++
 	}
 
 	fmt.Println(count)
