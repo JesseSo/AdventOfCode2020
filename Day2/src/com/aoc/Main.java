@@ -7,7 +7,7 @@ public class Main {
     public static void main(String[] args) {
 
         try {
-            File input = new File("src/com/aoc/input.txt");
+            File input = new File("src/input.txt");
             BufferedReader br = new BufferedReader(new FileReader(input));
             BufferedReader br2 = new BufferedReader(new FileReader(input));
             System.out.println("Answer1: " + answer1(br)+ " Answer2 : " + answer2(br2));
