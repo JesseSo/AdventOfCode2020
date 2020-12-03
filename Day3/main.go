@@ -45,8 +45,4 @@ func move(x int, y int) {
 	}
 
 	fmt.Println(count)
-
-	if err := scanner.Err(); err != nil {
-		log.Fatal(err)
-	}
 }
