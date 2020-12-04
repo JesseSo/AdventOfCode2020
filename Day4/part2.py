@@ -1,5 +1,50 @@
 import re
 
+def validateByr(byr):
+    if int(byr) >= validByr[0] and int(byr) <= validByr[1] :
+        return True
+    else:
+        return False
+
+def validateEcl(ecl):
+    if ecl in validEcl :
+        return True
+    else:
+        return False
+
+def validateEyr(eyr):
+    if int(eyr) >= validEyr[0] and int(eyr) <= validEyr[1] :
+        return True
+    else: 
+        return False
+
+def validateHcl(hcl):
+    if re.search("^#.*[a-f0-9]{6}$", hcl) :
+        return True
+    else:
+        return False
+
+def validateHgt(hgt):
+    if hgt.endswith("in") :
+        if int(hgt[:-2]) >= validHgtIn[0] and int(hgt[:-2]) <= validHgtIn[1] :
+                return True
+    if hgt.endswith("cm") :
+        if int(hgt[:-2]) >= validHgtCm[0] and int(hgt[:-2]) <= validHgtCm[1] :
+                return True
+    return False
+
+def validateIyr(iyr):
+    if int(iyr) >= validIyr[0] and int(iyr) <= validIyr[1] :
+        return True
+    else:
+        return False
+
+def validatePid(pid):
+    if len(pid) == validPidLenght :
+        return True
+    else:
+        return False
+
 f = open("text.txt", "r")
 fileLines = f.readlines()
 dataLines = []
@@ -42,27 +87,15 @@ for line in requiredColumnPassports :
     for line in splitLine :
         if cid in line :
             splitLine.pop(1)
-    if int(splitLine[0].split(":")[1]) >= validByr[0] and int(splitLine[0].split(":")[1]) <= validByr[1] :
-        count = count + 1
-    if splitLine[1].split(":")[1] in validEcl :
-        count = count + 1
-    if int(splitLine[2].split(":")[1]) >= validEyr[0] and int(splitLine[2].split(":")[1]) <= validEyr[1] :
-        count = count + 1
-    if re.search("^#.*[a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9]$", splitLine[3].split(":")[1]) :
-        count = count + 1
-    if splitLine[4].split(":")[1].endswith("in") or splitLine[4].split(":")[1].endswith("cm") :
-        if splitLine[4].split(":")[1].endswith("in") :
-            if int(splitLine[4].split(":")[1][:-2]) >= validHgtIn[0] and int(splitLine[4].split(":")[1][:-2]) <= validHgtIn[1] :
-                count = count +1
-        if splitLine[4].split(":")[1].endswith("cm") :
-            if int(splitLine[4].split(":")[1][:-2]) >= validHgtCm[0] and int(splitLine[4].split(":")[1][:-2]) <= validHgtCm[1] :
-                count = count +1
-    if int(splitLine[5].split(":")[1]) >= validIyr[0] and int(splitLine[5].split(":")[1]) <= validIyr[1] :
-        count = count + 1
-    if len(splitLine[6].split(":")[1]) == validPidLenght :
-        count = count + 1
-    if count == 7 :
+    byr = splitLine[0].split(":")[1]
+    ecl = splitLine[1].split(":")[1]
+    eyr = splitLine[2].split(":")[1]
+    hcl = splitLine[3].split(":")[1]
+    hgt = splitLine[4].split(":")[1]
+    iyr = splitLine[5].split(":")[1]
+    pid = splitLine[6].split(":")[1]
+
+    if validateByr(byr) and validateEcl(ecl) and validateEyr(eyr) and validateHcl(hcl) and validateHgt(hgt) and validateIyr(iyr) and validatePid(pid):
         validPassports = validPassports + 1
-    count = 0 
 
 print(validPassports+1)
