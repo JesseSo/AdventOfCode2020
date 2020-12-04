@@ -1,7 +1,7 @@
 import re
 
 def validateByr(byr):
-    if int(byr) >= validByr[0] and int(byr) <= validByr[1] :
+    if int(byr) >= 1920 and int(byr) <= 2002 :
         return True
     else:
         return False
@@ -13,7 +13,7 @@ def validateEcl(ecl):
         return False
 
 def validateEyr(eyr):
-    if int(eyr) >= validEyr[0] and int(eyr) <= validEyr[1] :
+    if int(eyr) >= 2020 and int(eyr) <= 2030 :
         return True
     else: 
         return False
@@ -26,15 +26,15 @@ def validateHcl(hcl):
 
 def validateHgt(hgt):
     if hgt.endswith("in") :
-        if int(hgt[:-2]) >= validHgtIn[0] and int(hgt[:-2]) <= validHgtIn[1] :
+        if int(hgt[:-2]) >= 59 and int(hgt[:-2]) <= 76 :
                 return True
     if hgt.endswith("cm") :
-        if int(hgt[:-2]) >= validHgtCm[0] and int(hgt[:-2]) <= validHgtCm[1] :
+        if int(hgt[:-2]) >= 150 and int(hgt[:-2]) <= 193 :
                 return True
     return False
 
 def validateIyr(iyr):
-    if int(iyr) >= validIyr[0] and int(iyr) <= validIyr[1] :
+    if int(iyr) >= 2010 and int(iyr) <= 2020 :
         return True
     else:
         return False
@@ -44,48 +44,42 @@ def validatePid(pid):
         return True
     else:
         return False
+    
+def getDataInOneRow(lines):
+    dataLines = []
+    oneLine = ""
+    for line in lines :
+        if line == "\n" :
+            dataLines.append(oneLine.replace('\n', ' '))
+            oneLine=""
+        else :
+            oneLine+=line
+    return dataLines
+
+def getRowsWithRequiredValues(lines):
+    count = 0
+    requiredColumnPassports = []
+    for line in getDataInOneRow(fileLines) :
+        for value in requiredValues :
+            if value in line :
+                count += 1
+        if count == len(requiredValues) :
+            requiredColumnPassports.append(line)
+        count = 0
+    return requiredColumnPassports
 
 f = open("text.txt", "r")
 fileLines = f.readlines()
-dataLines = []
-requiredColumnPassports = []
-validByr = [1920, 2002]
-validIyr = [2010, 2020]
-validEyr = [2020, 2030]
-validHgtCm = [150, 193]
-validHgtIn = [59, 76]
 validEcl = ["amb", "blu", "brn", "gry", "grn", "hzl", "oth"]
 requiredValues = ["byr:", "iyr:", "eyr:", "hgt:", "hcl:", "ecl:", "pid:"]
-validPidLenght = 9;
-cid = "cid:"
-
-oneLine = ""
-count = 0
+validPidLenght = 9
 validPassports = 0
 
-for line in fileLines :
-    if line == "\n" :
-        dataLines.append(oneLine.replace('\n', ' '))
-        oneLine=""
-    else :
-        oneLine+=line
-for line in dataLines :
-    for value in requiredValues :
-        if value in line :
-            count += 1
-    if count == len(requiredValues) :
-        requiredColumnPassports.append(line)
-        count = 0
-    else :
-        count = 0
-
-count = 0
-
-for line in requiredColumnPassports :
+for line in getRowsWithRequiredValues(getDataInOneRow(fileLines)) :
     splitLine = line.split()
     splitLine.sort()
     for line in splitLine :
-        if cid in line :
+        if "cid" in line :
             splitLine.pop(1)
     byr = splitLine[0].split(":")[1]
     ecl = splitLine[1].split(":")[1]
@@ -96,6 +90,6 @@ for line in requiredColumnPassports :
     pid = splitLine[6].split(":")[1]
 
     if validateByr(byr) and validateEcl(ecl) and validateEyr(eyr) and validateHcl(hcl) and validateHgt(hgt) and validateIyr(iyr) and validatePid(pid):
-        validPassports = validPassports + 1
+        validPassports += 1
 
 print(validPassports+1)
